@@ -1,5 +1,8 @@
 <template>
-  <div class="task-container">
+  <div
+    class="task-container"
+    :style="{ 'max-height': showAddTasks ? '200px' : '70vh' }"
+  >
     <div :key="task.id" v-for="task in tasks">
       <task
         @delete-clicked="$emit('delete-clicked', task.id)"
@@ -17,6 +20,8 @@ export default {
   name: "Tasks",
   props: {
     tasks: Array,
+    maxHeight: String,
+    showAddTasks: Boolean,
   },
   components: {
     Task,
@@ -27,7 +32,6 @@ export default {
 
 <style scoped>
 .task-container {
-  max-height: 200px;
   overflow-y: auto;
 }
 </style>

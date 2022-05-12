@@ -1,10 +1,16 @@
 <template>
   <div class="container">
-    <Header title="Task Tracker" />
+    <Header
+      @toggle-show-task="toggleShowAddTask"
+      :showAddTasks="showAddTasks"
+      title="Task Tracker"
+    />
+    <AddTask v-if="showAddTasks" @addedNewTask="addNewTask" />
     <Tasks
       @delete-clicked="deleteTask($event, 1)"
       @task-clicked="toggleAlert"
       :tasks="tasks"
+      :showAddTasks="showAddTasks"
     />
   </div>
 </template>
@@ -12,14 +18,19 @@
 <script>
 import Header from "./components/Header.vue";
 import Tasks from "./components/Tasks.vue";
+import AddTask from "./components/AddTask.vue";
 
 export default {
   name: "App",
   components: {
     Header,
     Tasks,
+    AddTask,
   },
   methods: {
+    toggleShowAddTask() {
+      this.showAddTasks = !this.showAddTasks;
+    },
     deleteTask(event, apples) {
       console.log(apples);
       console.log("Delete clicked for ID", event);
@@ -31,18 +42,15 @@ export default {
       const index = this.tasks.findIndex((task) => task.id === id);
 
       this.tasks[index].reminder = !this.tasks[index].reminder;
-
-      console.log(index);
-
-      // this.tasks = this.tasks.map((task) => {
-      //   return task.id === id ? { ...task, reminder: !task.reminder } : task;
-      // });
-      // console.log(this.tasks);
+    },
+    addNewTask(task) {
+      this.tasks.push(task);
     },
   },
   data() {
     return {
       tasks: Array,
+      showAddTasks: false,
     };
   },
   created() {
@@ -67,7 +75,7 @@ export default {
       },
     ];
   },
-  emits: ["delete-clicked", "task-clicked"],
+  emits: ["delete-clicked", "task-clicked", "addedNewTask"],
 };
 </script>
 

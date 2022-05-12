@@ -1,7 +1,18 @@
 <template>
   <header>
     <h1>{{ title }}</h1>
-    <Button @button-click="$emit('add-task')" text="Add Task" color="green" />
+    <Button
+      v-if="!showAddTasks"
+      @button-click="$emit('toggle-show-task')"
+      text="Add Task"
+      color="green"
+    />
+    <Button
+      v-if="showAddTasks"
+      @button-click="$emit('toggle-show-task')"
+      text="Hide Task"
+      color="red"
+    />
   </header>
 </template>
 
@@ -13,6 +24,7 @@ export default {
     title: {
       type: String,
     },
+    showAddTasks: false,
   },
   components: {
     Button,
