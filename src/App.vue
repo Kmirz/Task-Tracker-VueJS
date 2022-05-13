@@ -1,4 +1,32 @@
 <template>
+  <div
+    id="liveToast"
+    class="
+      toast
+      position-fixed
+      top-0
+      start-50
+      translate-middle-x
+      text-white
+      bg-success
+      border-0
+    "
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+    style="position: absolute; width: auto; text-align: center"
+  >
+    <div class="d-flex">
+      <div class="toast-body">A new task has been added!</div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+
   <div class="container">
     <Header
       @toggle-show-task="toggleShowAddTask"
@@ -19,6 +47,7 @@
 import Header from "./components/Header.vue";
 import Tasks from "./components/Tasks.vue";
 import AddTask from "./components/AddTask.vue";
+import * as bootstrap from "bootstrap";
 
 export default {
   name: "App",
@@ -44,7 +73,13 @@ export default {
       this.tasks[index].reminder = !this.tasks[index].reminder;
     },
     addNewTask(task) {
-      this.tasks.push(task);
+      this.tasks.unshift(task);
+
+      let toastMessage = document.querySelector("#liveToast");
+
+      let toast = new bootstrap.Toast(toastMessage);
+
+      toast.show();
     },
   },
   data() {
@@ -100,7 +135,7 @@ body {
 }
 .btn {
   display: inline-block;
-  background: #000;
+  background: green;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -113,6 +148,7 @@ body {
 }
 .btn:focus {
   outline: none;
+  color: green;
 }
 .btn:active {
   transform: scale(0.98);

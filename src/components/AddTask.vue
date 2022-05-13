@@ -55,11 +55,16 @@ export default {
 </script>
 
 <style scoped>
+btn-block:hover {
+  color: green;
+}
+
 .add-form {
   margin-bottom: 40px;
 }
 .form-control {
   margin: 20px 0;
+  border: 0px;
 }
 .form-control label {
   display: block;
