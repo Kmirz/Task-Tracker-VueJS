@@ -1,39 +1,16 @@
 <template>
-  <div
-    id="liveToast"
-    class="
-      toast
-      position-fixed
-      top-0
-      start-50
-      translate-middle-x
-      text-white
-      bg-success
-      border-0
-    "
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-    style="position: absolute; width: auto; text-align: center"
-  >
-    <div class="d-flex">
-      <div class="toast-body">A new task has been added!</div>
-      <button
-        type="button"
-        class="btn-close btn-close-white me-2 m-auto"
-        data-bs-dismiss="toast"
-        aria-label="Close"
-      ></button>
-    </div>
-  </div>
-
+  <Toast :messageStyle="messageStyle" :message="message" />
   <div class="container">
     <Header
       @toggle-show-task="toggleShowAddTask"
       :showAddTasks="showAddTasks"
       title="Task Tracker"
     />
-    <AddTask v-if="showAddTasks" @addedNewTask="addNewTask" />
+    <AddTask
+      v-if="showAddTasks"
+      @addedNewTask="addNewTask"
+      @incompleteEntry="displayIncompleteMessage"
+    />
     <Tasks
       @delete-clicked="deleteTask($event, 1)"
       @task-clicked="toggleAlert"
@@ -47,6 +24,7 @@
 import Header from "./components/Header.vue";
 import Tasks from "./components/Tasks.vue";
 import AddTask from "./components/AddTask.vue";
+import Toast from "./components/Toast.vue";
 import * as bootstrap from "bootstrap";
 
 export default {
@@ -55,6 +33,7 @@ export default {
     Header,
     Tasks,
     AddTask,
+    Toast,
   },
   methods: {
     toggleShowAddTask() {
@@ -63,7 +42,17 @@ export default {
     deleteTask(event, apples) {
       console.log(apples);
       console.log("Delete clicked for ID", event);
+
       this.tasks = this.tasks.filter((task) => task.id !== event);
+
+      let toastMessage = document.querySelector("#liveToast");
+      this.messageStyle = "bg-danger";
+
+      this.message = `Task has been deleted!`;
+
+      let toast = new bootstrap.Toast(toastMessage);
+      console.log(toast);
+      toast.show();
     },
     toggleAlert(id) {
       console.log("toggle Alert", id);
@@ -77,6 +66,21 @@ export default {
 
       let toastMessage = document.querySelector("#liveToast");
 
+      this.messageStyle = "bg-success";
+
+      this.message = `New Task of '${this.tasks[0].text}' has been added!`;
+
+      let toast = new bootstrap.Toast(toastMessage);
+
+      toast.show();
+    },
+    displayIncompleteMessage() {
+      let toastMessage = document.querySelector("#liveToast");
+
+      this.messageStyle = "bg-warning";
+
+      this.message = `Please enter all required information to submit`;
+
       let toast = new bootstrap.Toast(toastMessage);
 
       toast.show();
@@ -86,27 +90,47 @@ export default {
     return {
       tasks: Array,
       showAddTasks: false,
+      messageStyle: "bg-danger",
+      message: "",
     };
   },
   created() {
     this.tasks = [
       {
         id: 1,
-        text: "Doctors Appointment 1",
+        text: "Doctors appointment",
         day: "March 2nd",
-        reminder: "true",
+        reminder: true,
       },
       {
         id: 2,
-        text: "Doctors Appointment 2",
-        day: "March 2nd",
-        reminder: "true",
+        text: "Buy lemons",
+        day: "March 22nd",
+        reminder: false,
       },
       {
         id: 3,
-        text: "Doctors Appointment 3",
-        day: "March 2nd",
-        reminder: "true",
+        text: "Go to the dentist",
+        day: "May 5th",
+        reminder: true,
+      },
+      {
+        id: 4,
+        text: "Parent teacher interview",
+        day: "April 1st",
+        reminder: true,
+      },
+      {
+        id: 5,
+        text: "Buy Larry new game",
+        day: "July 1st",
+        reminder: true,
+      },
+      {
+        id: 5,
+        text: "Do more coding",
+        day: "Jan 1st",
+        reminder: false,
       },
     ];
   },
@@ -148,7 +172,7 @@ body {
 }
 .btn:focus {
   outline: none;
-  color: green;
+  color: white;
 }
 .btn:active {
   transform: scale(0.98);

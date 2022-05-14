@@ -36,27 +36,31 @@ export default {
     onSubmit(e) {
       e.preventDefault();
 
-      let newTask = {
-        id: Math.floor(Math.random() * 10000),
-        text: this.text,
-        day: this.day,
-        reminder: this.reminder,
-      };
+      if (this.text && this.day) {
+        let newTask = {
+          id: Math.floor(Math.random() * 10000),
+          text: this.text,
+          day: this.day,
+          reminder: this.reminder,
+        };
 
-      console.log("Your new ID is", newTask.id);
-      this.$emit("addedNewTask", newTask);
+        console.log("Your new ID is", newTask.id);
+        this.$emit("addedNewTask", newTask);
 
-      this.text = "";
-      this.day = "";
-      this.reminder = "";
+        this.text = "";
+        this.day = "";
+        this.reminder = "";
+      } else {
+        this.$emit("incompleteEntry");
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-btn-block:hover {
-  color: green;
+btn:active {
+  color: blue;
 }
 
 .add-form {
